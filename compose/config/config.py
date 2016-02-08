@@ -174,8 +174,11 @@ class ConfigFile(namedtuple('_ConfigFile', 'filename config')):
     def get_networks(self):
         return {} if self.version == V1 else self.config.get('networks', {})
 
+    def get_aliases(self):
+        return {} if self.version == V1 else self.config.get('aliases', {})
 
-class Config(namedtuple('_Config', 'version services volumes networks')):
+
+class Config(namedtuple('_Config', 'version services volumes networks aliases')):
     """
     :param version: configuration version
     :type  version: int
@@ -185,6 +188,8 @@ class Config(namedtuple('_Config', 'version services volumes networks')):
     :type  volumes: :class:`dict`
     :param networks: Dictionary mapping network names to description dictionaries
     :type  networks: :class:`dict`
+    :param aliases: Dictionary mapping alias names to service names
+    :type aliases: :class:`dict`
     """
 
 
@@ -292,6 +297,7 @@ def load(config_details):
     main_file = config_details.config_files[0]
     volumes = load_mapping(config_details.config_files, 'get_volumes', 'Volume')
     networks = load_mapping(config_details.config_files, 'get_networks', 'Network')
+    aliases = load_mapping(config_details.config_files, 'get_aliases', 'Alias')
     service_dicts = load_services(
         config_details.working_dir,
         main_file,
@@ -301,7 +307,7 @@ def load(config_details):
         for service_dict in service_dicts:
             match_named_volumes(service_dict, volumes)
 
-    return Config(main_file.version, service_dicts, volumes, networks)
+    return Config(main_file.version, service_dicts, volumes, networks, aliases)
 
 
 def load_mapping(config_files, get_func, entity_type):
@@ -313,7 +319,10 @@ def load_mapping(config_files, get_func, entity_type):
             if not config:
                 continue
 
-            external = config.get('external')
+            try:
+                external = config.get('external')
+            except AttributeError:
+                external = False
             if external:
                 if len(config.keys()) > 1:
                     raise ConfigurationError(

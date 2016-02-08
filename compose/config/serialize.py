@@ -22,6 +22,7 @@ def serialize_config(config):
         'services': {service.pop('name'): service for service in config.services},
         'networks': config.networks,
         'volumes': config.volumes,
+        'aliases': config.aliases,
     }
     return yaml.safe_dump(
         output,

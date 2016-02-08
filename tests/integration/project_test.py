@@ -573,6 +573,7 @@ class ProjectTest(DockerClientTestCase):
                 'bar': {'driver': None},
                 'baz': {},
             },
+            aliases=None,
         )
 
         project = Project.from_config(
@@ -622,6 +623,7 @@ class ProjectTest(DockerClientTestCase):
                     },
                 },
             },
+            aliases=None,
         )
 
         project = Project.from_config(
@@ -665,6 +667,7 @@ class ProjectTest(DockerClientTestCase):
             }],
             volumes={vol_name: {'driver': 'local'}},
             networks={},
+            aliases=None,
         )
 
         project = Project.from_config(
@@ -743,6 +746,7 @@ class ProjectTest(DockerClientTestCase):
             }],
             volumes={vol_name: {}},
             networks={},
+            aliases=None,
         )
 
         project = Project.from_config(
@@ -768,6 +772,7 @@ class ProjectTest(DockerClientTestCase):
             }],
             volumes={vol_name: {}},
             networks={},
+            aliases=None,
         )
 
         project = Project.from_config(
@@ -793,6 +798,7 @@ class ProjectTest(DockerClientTestCase):
             }],
             volumes={vol_name: {'driver': 'foobar'}},
             networks={},
+            aliases=None,
         )
 
         project = Project.from_config(
@@ -816,6 +822,7 @@ class ProjectTest(DockerClientTestCase):
             }],
             volumes={vol_name: {'driver': 'local'}},
             networks={},
+            aliases=None,
         )
         project = Project.from_config(
             name='composetest',
@@ -858,6 +865,7 @@ class ProjectTest(DockerClientTestCase):
                 vol_name: {'external': True, 'external_name': vol_name}
             },
             networks=None,
+            aliases=None,
         )
         project = Project.from_config(
             name='composetest',
@@ -883,6 +891,7 @@ class ProjectTest(DockerClientTestCase):
                 vol_name: {'external': True, 'external_name': vol_name}
             },
             networks=None,
+            aliases=None,
         )
         project = Project.from_config(
             name='composetest',

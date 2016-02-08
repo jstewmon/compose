@@ -37,12 +37,13 @@ class Project(object):
     """
     A collection of services.
     """
-    def __init__(self, name, services, client, networks=None, volumes=None):
+    def __init__(self, name, services, client, networks=None, volumes=None, aliases=None):
         self.name = name
         self.services = services
         self.client = client
         self.volumes = volumes or ProjectVolumes({})
         self.networks = networks or ProjectNetworks({}, False)
+        self.aliases = aliases or {}
 
     def labels(self, one_off=False):
         return [
@@ -62,7 +63,8 @@ class Project(object):
             networks,
             use_networking)
         volumes = ProjectVolumes.from_config(name, config_data, client)
-        project = cls(name, [], client, project_networks, volumes)
+        aliases = config_data.aliases
+        project = cls(name, [], client, project_networks, volumes, aliases)
 
         for service_dict in config_data.services:
             service_dict = dict(service_dict)

@@ -53,6 +53,18 @@ def project_from_options(base_dir, options):
     )
 
 
+def resolve_service_aliases_in_options(project, options):
+    service = options.get('SERVICE', '')
+    if not isinstance(service, six.string_types):
+        services = []
+        for service_name in service:
+            if service_name in project.aliases:
+                services.extend(project.aliases[service_name])
+            else:
+                services.append(service_name)
+        options['SERVICE'] = services
+
+
 def get_config_path_from_options(options):
     file_option = options.get('--file')
     if file_option:

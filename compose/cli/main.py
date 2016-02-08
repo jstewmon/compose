@@ -31,6 +31,7 @@ from ..service import NeedsBuildError
 from .command import friendly_error_message
 from .command import get_config_path_from_options
 from .command import project_from_options
+from .command import resolve_service_aliases_in_options
 from .docopt_command import DocoptCommand
 from .docopt_command import NoSuchCommand
 from .errors import UserError
@@ -170,6 +171,8 @@ class TopLevelCommand(DocoptCommand):
             return
 
         project = project_from_options(self.base_dir, options)
+        resolve_service_aliases_in_options(project, command_options)
+
         with friendly_error_message():
             handler(project, command_options)
 
@@ -312,7 +315,6 @@ class TopLevelCommand(DocoptCommand):
             --no-color  Produce monochrome output.
         """
         containers = project.containers(service_names=options['SERVICE'], stopped=True)
-
         monochrome = options['--no-color']
         print("Attaching to", list_containers(containers))
         LogPrinter(containers, monochrome=monochrome).run()
